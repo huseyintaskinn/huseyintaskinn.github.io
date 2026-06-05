@@ -1,711 +1,1235 @@
 <!DOCTYPE html>
 <html lang="tr">
-
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Hüseyin Taşkın - Kişisel Web Sitesi</title>
-  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700,200" rel="stylesheet">
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
-  <link href="css/aos.css?ver=1.1.0" rel="stylesheet">
-  <link href="css/bootstrap.min.css?ver=1.1.0" rel="stylesheet">
-  <link href="css/main.css?ver=1.1.0" rel="stylesheet">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-  <noscript>
-    <style type="text/css">
-      [data-aos] {
-        opacity: 1 !important;
-        transform: translate(0) scale(1) !important;
-      }
-    </style>
-  </noscript>
+<link rel="icon" type="image/png" href="favicon/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="favicon/favicon.svg" />
+<link rel="shortcut icon" href="favicon/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="favicon/apple-touch-icon.png" />
+<link rel="manifest" href="favicon/site.webmanifest" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hüseyin Taşkın — Backend Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #0D0F14;
+  --ink2: #181B24;
+  --ink3: #222635;
+  --surface: #F4F3EE;
+  --surface2: #ECEAE2;
+  --accent: #2563EB;
+  --accent2: #1D4ED8;
+  --accent-glow: rgba(37,99,235,0.18);
+  --teal: #0EA5A0;
+  --amber: #F59E0B;
+  --muted: #6B7280;
+  --border: rgba(255,255,255,0.07);
+  --mono: 'JetBrains Mono', monospace;
+  --display: 'Syne', sans-serif;
+  --body: 'DM Sans', sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--ink);
+  color: var(--surface);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--ink); }
+::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+/* ── NOISE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.25rem 4rem;
+  backdrop-filter: blur(20px);
+  background: rgba(13,15,20,0.8);
+  border-bottom: 1px solid var(--border);
+  transition: all 0.3s;
+}
+
+.nav-logo {
+  font-family: var(--display);
+  font-weight: 800; font-size: 1.1rem;
+  letter-spacing: -0.02em;
+  color: var(--surface);
+  text-decoration: none;
+}
+
+.nav-logo span { color: var(--accent); }
+
+.nav-links { display: flex; gap: 2.5rem; }
+.nav-links a {
+  font-family: var(--mono); font-size: 0.78rem;
+  color: var(--muted); text-decoration: none;
+  letter-spacing: 0.05em; text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+.nav-links a::after {
+  content: ''; position: absolute; bottom: -4px; left: 0; right: 0;
+  height: 1px; background: var(--accent);
+  transform: scaleX(0); transition: transform 0.25s;
+}
+.nav-links a:hover { color: var(--surface); }
+.nav-links a:hover::after { transform: scaleX(1); }
+
+.nav-cta {
+  font-family: var(--mono); font-size: 0.75rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--accent);
+  color: var(--accent); border-radius: 4px;
+  text-decoration: none; letter-spacing: 0.06em;
+  transition: all 0.2s;
+}
+.nav-cta:hover { background: var(--accent); color: white; }
+
+/* ── HERO ── */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 8rem 4rem 4rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-grid-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 30%, transparent 100%);
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  animation: orbFloat 8s ease-in-out infinite;
+}
+.hero-orb-1 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(37,99,235,0.15) 0%, transparent 70%);
+  top: -100px; right: -100px;
+}
+.hero-orb-2 {
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(14,165,160,0.1) 0%, transparent 70%);
+  bottom: 0; left: 200px;
+  animation-delay: -4s;
+}
+
+@keyframes orbFloat {
+  0%,100% { transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-30px) scale(1.05); }
+}
+
+.hero-content { position: relative; z-index: 1; max-width: 800px; }
+
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--teal); letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.4rem 1rem;
+  border: 1px solid rgba(14,165,160,0.3);
+  border-radius: 100px;
+  background: rgba(14,165,160,0.07);
+  margin-bottom: 2rem;
+  opacity: 0; animation: fadeUp 0.8s 0.2s forwards;
+}
+.hero-badge::before {
+  content: ''; width: 6px; height: 6px;
+  background: var(--teal); border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.8); }
+}
+
+.hero-name {
+  font-family: var(--display);
+  font-size: clamp(3.5rem, 8vw, 6.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+  margin-bottom: 1.5rem;
+  opacity: 0; animation: fadeUp 0.9s 0.35s forwards;
+}
+
+.hero-name .line2 {
+  -webkit-text-stroke: 1px rgba(244,243,238,0.25);
+  color: transparent;
+}
+.hero-name .accent { color: var(--accent); }
+
+.hero-desc {
+  font-size: 1.1rem;
+  color: rgba(244,243,238,0.6);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 3rem;
+  opacity: 0; animation: fadeUp 0.9s 0.5s forwards;
+}
+
+.hero-stack {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  margin-bottom: 2.5rem;
+  opacity: 0; animation: fadeUp 0.9s 0.65s forwards;
+}
+.stack-tag {
+  font-family: var(--mono); font-size: 0.7rem;
+  padding: 0.3rem 0.75rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px;
+  color: rgba(244,243,238,0.6);
+  letter-spacing: 0.04em;
+}
+
+.hero-actions {
+  display: flex; gap: 1rem; align-items: center;
+  opacity: 0; animation: fadeUp 0.9s 0.8s forwards;
+}
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 0.85rem 2rem;
+  background: var(--accent);
+  color: white; font-family: var(--mono); font-size: 0.8rem;
+  letter-spacing: 0.06em; text-decoration: none;
+  border-radius: 6px; border: none; cursor: pointer;
+  transition: all 0.25s;
+  box-shadow: 0 0 30px var(--accent-glow);
+}
+.btn-primary:hover {
+  background: var(--accent2);
+  transform: translateY(-2px);
+  box-shadow: 0 0 40px rgba(37,99,235,0.35);
+}
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 0.85rem 1.75rem;
+  color: rgba(244,243,238,0.7);
+  font-family: var(--mono); font-size: 0.8rem;
+  letter-spacing: 0.06em; text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 6px; transition: all 0.25s;
+}
+.btn-secondary:hover {
+  border-color: rgba(255,255,255,0.3);
+  color: var(--surface);
+}
+
+.hero-scroll {
+  position: absolute; bottom: 2.5rem; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  opacity: 0; animation: fadeUp 0.9s 1.2s forwards;
+}
+.scroll-line {
+  width: 1px; height: 50px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+  animation: scrollDown 2s ease-in-out infinite;
+}
+@keyframes scrollDown {
+  0% { transform: scaleY(0); transform-origin: top; }
+  50% { transform: scaleY(1); transform-origin: top; }
+  51% { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+.scroll-label {
+  font-family: var(--mono); font-size: 0.65rem;
+  color: var(--muted); letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── SECTIONS ── */
+section { padding: 6rem 4rem; position: relative; }
+
+.section-label {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--accent); letter-spacing: 0.15em;
+  text-transform: uppercase; margin-bottom: 1rem;
+}
+.section-title {
+  font-family: var(--display);
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800; letter-spacing: -0.03em;
+  line-height: 1.1; margin-bottom: 1rem;
+}
+.section-sub {
+  color: rgba(244,243,238,0.5);
+  max-width: 500px; font-size: 1rem;
+  margin-bottom: 3.5rem;
+}
+
+/* ── DIVIDER ── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(37,99,235,0.4), transparent);
+  margin: 0 4rem;
+}
+
+/* ── ABOUT ── */
+#about { background: var(--ink2); }
+
+.about-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 5rem; align-items: center;
+  max-width: 1100px;
+}
+
+.about-text p {
+  color: rgba(244,243,238,0.65);
+  line-height: 1.8; margin-bottom: 1.25rem;
+  font-size: 1.025rem;
+}
+.about-text strong { color: var(--surface); }
+
+.about-stats {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.5rem; margin-top: 2.5rem;
+}
+.stat-box {
+  padding: 1.25rem 1.5rem;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  transition: all 0.3s;
+}
+.stat-box:hover {
+  background: rgba(37,99,235,0.08);
+  border-color: rgba(37,99,235,0.2);
+  transform: translateY(-3px);
+}
+.stat-number {
+  font-family: var(--display);
+  font-size: 2rem; font-weight: 800;
+  color: var(--accent); line-height: 1;
+  margin-bottom: 0.25rem;
+}
+.stat-label {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--muted); letter-spacing: 0.05em;
+}
+
+.about-visual {
+  position: relative; display: flex;
+  justify-content: center; align-items: center;
+}
+
+.code-window {
+  background: var(--ink3);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 12px; overflow: hidden;
+  width: 100%; max-width: 420px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+}
+.code-header {
+  display: flex; align-items: center; gap: 6px;
+  padding: 0.75rem 1rem;
+  background: rgba(0,0,0,0.2);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; }
+.dot-r { background: #FF5F57; }
+.dot-y { background: #FFBD2E; }
+.dot-g { background: #28CA41; }
+.code-filename {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--muted); margin-left: auto;
+}
+.code-body { padding: 1.5rem; font-family: var(--mono); font-size: 0.8rem; line-height: 1.8; }
+.c-kw { color: #C792EA; }
+.c-cls { color: #FFCB6B; }
+.c-fn { color: #82AAFF; }
+.c-str { color: #C3E88D; }
+.c-cm { color: #4A5568; }
+.c-num { color: #F78C6C; }
+.c-indent { display: inline-block; width: 1.5rem; }
+
+/* ── SKILLS ── */
+#skills { background: var(--ink); }
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  max-width: 1100px;
+}
+
+.skill-card {
+  padding: 1.75rem;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  transition: all 0.35s;
+  position: relative; overflow: hidden;
+}
+.skill-card::before {
+  content: ''; position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  transform: scaleX(0); transition: transform 0.4s;
+}
+.skill-card:hover::before { transform: scaleX(1); }
+.skill-card:hover {
+  background: rgba(37,99,235,0.06);
+  border-color: rgba(37,99,235,0.2);
+  transform: translateY(-4px);
+}
+
+.skill-icon {
+  font-size: 1.5rem; margin-bottom: 1rem;
+  display: inline-block;
+}
+.skill-cat {
+  font-family: var(--display);
+  font-size: 1rem; font-weight: 700;
+  margin-bottom: 1rem; color: var(--surface);
+}
+.skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.skill-tag {
+  font-family: var(--mono); font-size: 0.68rem;
+  padding: 3px 10px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 3px;
+  color: rgba(244,243,238,0.55);
+}
+
+/* ── PROJECTS ── */
+#projects { background: var(--ink2); }
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 1.5rem;
+  max-width: 1100px;
+}
+
+.project-card {
+  background: var(--ink3);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px; overflow: hidden;
+  transition: all 0.35s;
+  display: flex; flex-direction: column;
+  position: relative;
+}
+.project-card:hover {
+  transform: translateY(-6px);
+  border-color: rgba(37,99,235,0.3);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px rgba(37,99,235,0.1);
+}
+
+.project-card.featured {
+  grid-column: 1 / -1;
+  display: grid; grid-template-columns: 1fr 1fr;
+}
+
+.project-header {
+  padding: 1.75rem 1.75rem 0;
+}
+.project-featured-header { padding: 2.5rem; display: flex; flex-direction: column; justify-content: center; }
+
+.project-badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 1rem; }
+.badge {
+  font-family: var(--mono); font-size: 0.65rem;
+  padding: 2px 8px; border-radius: 3px;
+  letter-spacing: 0.05em;
+}
+.badge-blue { background: rgba(37,99,235,0.2); color: #93C5FD; border: 1px solid rgba(37,99,235,0.3); }
+.badge-teal { background: rgba(14,165,160,0.2); color: #5EEAD4; border: 1px solid rgba(14,165,160,0.3); }
+.badge-amber { background: rgba(245,158,11,0.2); color: #FCD34D; border: 1px solid rgba(245,158,11,0.3); }
+.badge-green { background: rgba(34,197,94,0.15); color: #86EFAC; border: 1px solid rgba(34,197,94,0.25); }
+
+.project-title {
+  font-family: var(--display);
+  font-size: 1.2rem; font-weight: 700;
+  line-height: 1.25; margin-bottom: 0.75rem;
+}
+.project-featured-header .project-title { font-size: 1.6rem; margin-bottom: 1rem; }
+
+.project-desc {
+  color: rgba(244,243,238,0.55);
+  font-size: 0.9rem; line-height: 1.65;
+  padding: 0.75rem 1.75rem;
+  flex: 1;
+}
+.project-featured-header .project-desc {
+  padding: 0; color: rgba(244,243,238,0.6);
+  font-size: 0.95rem;
+}
+
+.project-stack { display: flex; flex-wrap: wrap; gap: 5px; padding: 1rem 1.75rem; }
+.project-featured-header .project-stack { padding: 0; margin-top: 1rem; }
+
+.project-tech {
+  font-family: var(--mono); font-size: 0.65rem;
+  padding: 2px 8px; border-radius: 3px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.07);
+  color: rgba(244,243,238,0.45);
+}
+
+.project-footer {
+  display: flex; align-items: center; gap: 1rem;
+  padding: 1.25rem 1.75rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  margin-top: auto;
+}
+.project-link {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: var(--accent); text-decoration: none;
+  letter-spacing: 0.04em;
+  display: flex; align-items: center; gap: 6px;
+  transition: gap 0.2s;
+}
+.project-link:hover { gap: 10px; }
+
+.project-visual {
+  background: var(--ink);
+  display: flex; align-items: center; justify-content: center;
+  padding: 2.5rem;
+  border-left: 1px solid rgba(255,255,255,0.05);
+}
+
+.arch-diagram {
+  font-family: var(--mono); font-size: 0.72rem;
+  color: rgba(244,243,238,0.5); line-height: 2;
+  background: rgba(0,0,0,0.2);
+  padding: 1.25rem 1.5rem;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  white-space: pre;
+}
+.arch-hl { color: #82AAFF; }
+.arch-accent { color: var(--teal); }
+
+/* ── EXPERIENCE ── */
+#experience { background: var(--ink); }
+
+.exp-timeline { max-width: 750px; position: relative; }
+.exp-timeline::before {
+  content: ''; position: absolute;
+  left: 0; top: 0; bottom: 0; width: 1px;
+  background: linear-gradient(to bottom, var(--accent), transparent);
+}
+
+.exp-item {
+  padding-left: 2.5rem; margin-bottom: 3rem;
+  position: relative;
+}
+.exp-item::before {
+  content: ''; position: absolute;
+  left: -4px; top: 6px;
+  width: 9px; height: 9px;
+  background: var(--accent); border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.exp-period {
+  font-family: var(--mono); font-size: 0.7rem;
+  color: var(--teal); letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+}
+.exp-title {
+  font-family: var(--display);
+  font-size: 1.15rem; font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+.exp-company {
+  color: rgba(244,243,238,0.5); font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+.exp-bullets { list-style: none; }
+.exp-bullets li {
+  color: rgba(244,243,238,0.6);
+  font-size: 0.9rem; line-height: 1.65;
+  padding: 0.2rem 0;
+  padding-left: 1.2rem; position: relative;
+}
+.exp-bullets li::before {
+  content: '–'; position: absolute; left: 0;
+  color: var(--accent);
+}
+
+/* ── AWARDS ── */
+#awards {
+  background: var(--ink2);
+}
+.awards-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 1.5rem; max-width: 900px;
+}
+.award-card {
+  padding: 2rem;
+  background: rgba(255,255,255,0.025);
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: 14px;
+  position: relative; overflow: hidden;
+  transition: all 0.3s;
+}
+.award-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(37,99,235,0.25);
+  background: rgba(37,99,235,0.05);
+}
+.award-glyph {
+  font-size: 2rem; margin-bottom: 1rem; display: block;
+}
+.award-org {
+  font-family: var(--mono); font-size: 0.68rem;
+  color: var(--teal); letter-spacing: 0.1em;
+  text-transform: uppercase; margin-bottom: 0.5rem;
+}
+.award-title {
+  font-family: var(--display);
+  font-size: 1.05rem; font-weight: 700;
+  margin-bottom: 0.75rem; line-height: 1.3;
+}
+.award-desc {
+  color: rgba(244,243,238,0.55);
+  font-size: 0.87rem; line-height: 1.65;
+}
+.award-date {
+  font-family: var(--mono); font-size: 0.68rem;
+  color: var(--muted); margin-top: 1.25rem;
+}
+
+/* ── CONTACT ── */
+#contact {
+  background: var(--ink);
+  text-align: center;
+  padding: 8rem 4rem;
+}
+.contact-inner { max-width: 600px; margin: 0 auto; }
+.contact-email {
+  font-family: var(--display);
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-weight: 700;
+  color: var(--accent); text-decoration: none;
+  display: block; margin: 2rem 0;
+  transition: all 0.25s;
+}
+.contact-email:hover { opacity: 0.75; }
+.contact-links { display: flex; justify-content: center; gap: 1.5rem; margin-top: 2.5rem; }
+.contact-link {
+  font-family: var(--mono); font-size: 0.75rem;
+  color: rgba(244,243,238,0.5); text-decoration: none;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.6rem 1.25rem;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px; transition: all 0.25s;
+}
+.contact-link:hover {
+  color: var(--surface);
+  border-color: rgba(255,255,255,0.25);
+  transform: translateY(-2px);
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 1.5rem 4rem;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  display: flex; justify-content: space-between; align-items: center;
+}
+footer p {
+  font-family: var(--mono); font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* ── SCROLL REVEAL ── */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+@media (max-width: 900px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { display: none; }
+  section { padding: 4rem 1.5rem; }
+  #hero { padding: 7rem 1.5rem 4rem; }
+  .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .project-card.featured { grid-column: 1; grid-template-columns: 1fr; }
+  .project-visual { display: none; }
+  .awards-grid { grid-template-columns: 1fr; }
+  .section-divider { margin: 0 1.5rem; }
+  footer { flex-direction: column; gap: 0.75rem; text-align: center; }
+}
+</style>
 </head>
+<body>
 
-<body id="top">
-  <header>
-    <div class="profile-page sidebar-collapse">
-      <nav class="navbar navbar-expand-lg fixed-top navbar-transparent bg-info" color-on-scroll="400">
-        <div class="container">
-          <div class="navbar-translate"><a class="navbar-brand" href="#" rel="tooltip"><img src="logo.png" height="40px"
-                style="margin-right: 10px;"><img>HÜSEYİN TAŞKIN</a>
-            <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation"
-              aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation"><span
-                class="navbar-toggler-bar bar1"></span><span class="navbar-toggler-bar bar2"></span><span
-                class="navbar-toggler-bar bar3"></span></button>
-          </div>
-          <div class="collapse navbar-collapse justify-content-end" id="navigation">
-            <ul class="navbar-nav">
-              <li class="nav-item"><a class="nav-link smooth-scroll" href="#about">HAKKIMDA</a></li>
-              <li class="nav-item"><a class="nav-link smooth-scroll" href="#skill">BİLGİSAYAR BECERİLERİ</a></li>
-              <li class="nav-item"><a class="nav-link smooth-scroll" href="#portfolio">PORTFOLYO</a></li>
-              <li class="nav-item"><a class="nav-link smooth-scroll" href="#experience">EĞİTİM VE İŞ HAYATI</a></li>
-              <li class="nav-item"><a class="nav-link smooth-scroll" href="#contact">İLETİŞİM</a></li>
-            </ul>
-          </div>
-        </div>
-      </nav>
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">HT<span>.</span></a>
+  <div class="nav-links">
+    <a href="#about">Hakkımda</a>
+    <a href="#skills">Beceriler</a>
+    <a href="#projects">Projeler</a>
+    <a href="#experience">Deneyim</a>
+    <a href="#awards">Ödüller</a>
+  </div>
+  <a href="mailto:huseyintaskinn023@gmail.com" class="nav-cta">İletişim →</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-grid-bg"></div>
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-content">
+    <h1 class="hero-name">
+      Hüseyin<br>
+      <span class="line2">Taşkın</span>
+    </h1>
+    <p class="hero-desc">
+      RESTful API'ler, mikroservis mimarisi ve ölçeklenebilir dağıtık sistemler geliştiren
+      <strong style="color:var(--surface)">Backend Developer.</strong>
+      Python/Django ve Java/Spring Boot ekosistemlerinde kurumsal deneyim.
+    </p>
+    <div class="hero-stack">
+      <span class="stack-tag">Python · Django</span>
+      <span class="stack-tag">Java · Spring Boot</span>
+      <span class="stack-tag">Microservices</span>
+      <span class="stack-tag">PostgreSQL · Redis</span>
+      <span class="stack-tag">Docker · CI/CD</span>
+      <span class="stack-tag">RabbitMQ · Keycloak</span>
     </div>
-  </header>
-  <div class="page-content">
-    <div>
-      <div class="profile-page">
-        <div class="wrapper">
-          <div class="page-header page-header-small" filter-color="green">
-            <div class="page-header-image" data-parallax="true" style="background-image: url('images/cc-bg-1.jpg')">
-            </div>
-            <div class="container">
-              <div class="content-center">
-                <div class="cc-profile-image"><a href="#"><img src="images/photo.png" alt="Image" /></a></div>
-                <div class="h2 title">HÜSEYİN TAŞKIN</div>
-                <p class="category text-white">BİLGİSAYAR MÜHENDİSİ</p><a
-                  class="btn btn-info smooth-scroll mr-2" href="#contact" data-aos="zoom-in"
-                  data-aos-anchor="data-aos-anchor">İletişim</a><a class="btn btn-info" href="Hüseyin Taşkın CV.pdf"
-                  target="_blank" data-aos="zoom-in" data-aos-anchor="data-aos-anchor">CV İndir</a>
-              </div>
-            </div>
-            <div class="section">
-              <div class="container">
-                <div class="button-container"><a class="btn btn-default btn-round btn-lg btn-icon" target="_blank" href="https://www.linkedin.com/in/huseyintaskin023/"
-                    rel="tooltip" title="LinkedIn'de Beni Takip Edin"><i class="fa fa-linkedin"></i></a><a
-                    class="btn btn-default btn-round btn-lg btn-icon" target="_blank" href="https://github.com/huseyintaskinn" rel="tooltip"
-                    title="Github'ta Beni Takip Edin"><i class="fa fa-github"></i></a></div>
-              </div>
-            </div>
-          </div>
+    <div class="hero-actions">
+      <a href="#projects" class="btn-primary">Projeleri İncele →</a>
+      <a href="https://linkedin.com/in/huseyintaskin023" target="_blank" class="btn-secondary">LinkedIn ↗</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+    <span class="scroll-label">Kaydır</span>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-grid">
+    <div class="about-text">
+      <p class="section-label reveal">Hakkımda</p>
+      <h2 class="section-title reveal reveal-delay-1">Sistem tasarlarım,<br>ölçek düşünürüm.</h2>
+      <p class="reveal reveal-delay-2">
+        Marmara Üniversitesi Bilgisayar Mühendisliği mezunuyum (2025). Kariyerim boyunca
+        <strong>AYVOS Bilgi Teknolojileri</strong>'nde backend developer olarak çalıştım;
+        ölçeklenebilir REST API'ler, JWT kimlik doğrulama ve PostgreSQL optimizasyonları üzerine
+        kurumsal projelerde aktif rol aldım.
+      </p>
+      <p class="reveal reveal-delay-3">
+        Son dönemde <strong>Java/Spring Boot</strong> ekosisteminde mikroservis mimarisi üzerine
+        derinleşiyorum. API Gateway, Saga Pattern, event-driven architecture ve OAuth2/Keycloak
+        gibi modern backend yaklaşımlarını gerçek projelerde uyguladım.
+      </p>
+      <p class="reveal reveal-delay-4">
+        <strong>TÜBİTAK 2209-A</strong> destekli araştırma projesi ve <strong>UYİK-2024</strong>
+        Uluslararası Kongresi deneyimlerim; teknik derinliğimin yanında araştırma
+        ve analitik düşünce altyapısını da yansıtıyor.
+      </p>
+      <div class="about-stats reveal">
+        <div class="stat-box">
+          <div class="stat-number">1+</div>
+          <div class="stat-label">Yıl Kurumsal Deneyim</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">8+</div>
+          <div class="stat-label">Proje</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">2</div>
+          <div class="stat-label">Lisans Derecesi</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-number">2</div>
+          <div class="stat-label">Akademik Ödül</div>
         </div>
       </div>
-      <div class="section" id="about">
-        <div class="container">
-          <div class="card" data-aos="fade-up" data-aos-offset="10">
-            <div class="row">
-              <div class="col-lg-6 col-md-12">
-                <div class="card-body">
-                  <div class="h4 mt-0 title">Hakkımda</div>
-                  <p style="text-align: justify;"> Merhaba, ben Hüseyin Taşkın. Bilgisayar Mühendisliği alanında kendimi geliştiren ve sürekli yeni bilgiler edinmeye
-                   odaklanan bir yazılım geliştiricisiyim. Eğitim sürecimde yazılım geliştirme, veri işleme, yapay zeka ve mobil uygulama
-                   geliştirme gibi alanlarda deneyim kazandım.</p>
-                  <p style="text-align: justify;">  Kariyerim boyunca, Vue.js ve Nuxt.js ile kullanıcı dostu ve dinamik ön yüzler geliştirdim. Django ve Django REST
-                   Framework kullanarak güçlü ve güvenilir arka uç sistemleri inşa ettim. JWT tabanlı güvenli kimlik doğrulama sistemleri
-                   oluşturma ve Swagger ile kapsamlı API dokümantasyonu hazırlama konularında yetkinlik kazandım.</p>
-                  <p style="text-align: justify;"> 
-                   Ayrıca, veri işleme ve makine öğrenmesi projelerinde aktif rol alarak geniş bir teknik bilgi birikimine sahip oldum.
-                   Python, JavaScript, Java, C#, HTML, CSS, Flutter gibi farklı programlama dilleri ve teknolojileri kullanarak projeler
-                   geliştirdim. GitHub üzerinde projelerimi sergilemekteyim.</p>
-                  <p style="text-align: justify;"> 
-                   Teknolojiye olan tutkum ve öğrenme isteğimle sürekli kendimi geliştirmeye ve bu yeni bilgileri projelerime entegre
-                   etmeye devam ediyorum. Amacım her zaman kendimi daha ileriye taşımak ve katkı sağlayabileceğim projelerde yer
-                   almak.</p>
-                </div>
-              </div>
-              <div class="col-lg-6 col-md-12">
-                <div class="card-body">
-                  <div class="h4 mt-0 title">Kişisel Bilgiler</div>
-                  <div class="row">
-                    <div class="col-sm-4"><strong class="text-uppercase">YAŞ:</strong></div>
-                    <div class="col-sm-8">23</div>
-                  </div>
-                  <div class="row mt-3">
-                    <div class="col-sm-4"><strong class="text-uppercase">E-POSTA:</strong></div>
-                    <div class="col-sm-8">huseyintaskinn023@gmail.com</div>
-                  </div>
-                  <div class="row mt-3">
-                    <div class="col-sm-4"><strong class="text-uppercase">KONUM:</strong></div>
-                    <div class="col-sm-8">Bahçelievler/İstanbul</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+    </div>
+    <div class="about-visual reveal reveal-delay-2">
+      <div class="code-window">
+        <div class="code-header">
+          <div class="dot dot-r"></div>
+          <div class="dot dot-y"></div>
+          <div class="dot dot-g"></div>
+          <span class="code-filename">developer.py</span>
         </div>
-      </div>
-      <div class="section" id="skill">
-        <div class="container">
-          <div class="h4 text-center mb-4 title">Bilgisayar Becerileri</div>
-          <div class="card" data-aos="fade-up" data-aos-anchor-placement="top-bottom">
-            <div class="card-body">
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">PYTHON</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 95%;"></div><span class="progress-value">95%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">DJANGO FRAMEWORK</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 85%;"></div><span class="progress-value">85%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">DJANGO REST FRAMEWORK</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 90%;"></div><span class="progress-value">90%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">HTML</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 95%;"></div><span class="progress-value">95%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">CSS</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 85%;"></div><span class="progress-value">85%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">JAVASCRIPT</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 80%;"></div><span class="progress-value">80%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">VUE.JS</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 70%;"></div><span class="progress-value">70%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">NUXT.JS</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 65%;"></div><span class="progress-value">65%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">PHP</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 70%;"></div><span class="progress-value">70%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">MYSQL</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 90%;"></div><span class="progress-value">90%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">MICROSOFT SQL SERVER</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 80%;"></div><span class="progress-value">80%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">POSTGRESQL</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 80%;"></div><span class="progress-value">80%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">FLUTTER</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 85%;"></div><span class="progress-value">85%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">JAVA</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 70%;"></div><span class="progress-value">70%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">C#</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 70%;"></div><span class="progress-value">70%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">MICROSOFT OFFICE</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 80%;"></div><span class="progress-value">80%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="row">
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">Git/GitHub</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 80%;"></div><span class="progress-value">80%</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-6">
-                  <div class="progress-container progress-info">
-                    <span class="progress-badge">ADOBE PHOTOSHOP</span>
-                    <div class="progress">
-                      <div class="progress-bar progress-bar-info" data-aos="progress-full" data-aos-offset="10"
-                        data-aos-duration="2000" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                        aria-valuemax="100" style="width: 70%;"></div><span class="progress-value">70%</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="section" id="portfolio">
-        <div class="container">
-          <div class="row">
-            <div class="col-md-6 ml-auto mr-auto">
-              <div class="h4 text-center mb-4 title">Portfolyo</div>
-            </div>
-          </div>
-          <div class="tab-content gallery">
-            <div class="tab-pane active" id="web-development">
-              <div class="ml-auto mr-auto">
-                <div class="row">
+        <div class="code-body">
+          <span class="c-cm"># Hüseyin Taşkın — Backend Developer</span>
+          <br>
+          <span class="c-kw">class</span> <span class="c-cls">Developer</span>:
+          <br>
+          <span class="c-indent"></span><span class="c-fn">name</span> = <span class="c-str">"Hüseyin Taşkın"</span> <br>
+          <span class="c-indent"></span><span class="c-fn">location</span> = <span class="c-str">"İstanbul, TR"</span> <br>
 
-                  <div class="col-md-10" style="margin: 20px auto;" id="proje-1">
-                    <div class="cc-porfolio-image img-raised aos-init aos-animate" data-aos="fade-up"
-                      data-aos-anchor-placement="top-bottom"><a href="#proje-1">
-                        <figure class="cc-effect"><img src="images/project-6.png" alt="Image">
-                          <figcaption>
-                            <div class="h4">FaceHair - Yüz Şeklini Algılayıp Uygun Saç Modeli Öneren Uygulama</div>
-                            <p>Yapay Zeka Programlama - Python</p>
-                          </figcaption>
-                        </figure>
-                      </a></div>
+          <span class="c-indent"></span><span class="c-fn">stack</span> = { <br>
+          <span class="c-indent"></span><span class="c-indent"></span><span class="c-str">"primary"</span>: [<span class="c-str">"Python"</span>, <span class="c-str">"Java"</span>], <br>
+          <span class="c-indent"></span><span class="c-indent"></span><span class="c-str">"frameworks"</span>: [<span class="c-str">"Django"</span>, <span class="c-str">"Spring Boot"</span>], <br>
+          <span class="c-indent"></span><span class="c-indent"></span><span class="c-str">"arch"</span>: [<span class="c-str">"Microservices"</span>, <span class="c-str">"REST"</span>], <br>
+          <span class="c-indent"></span><span class="c-indent"></span><span class="c-str">"infra"</span>: [<span class="c-str">"Docker"</span>, <span class="c-str">"PostgreSQL"</span>], <br>
+          <span class="c-indent"></span>} <br>
 
-                      <h5 style="font-weight: bold; text-align: center;">FaceHair</h5>
-                      <p style="text-align: center;">FaceHair, kullanıcının yüklediği fotoğrafı analiz ederek yüz şeklini belirleyen bir projedir. Belirlenen yüz şekline göre uygun saç modellerini önerir ve kullanıcının kendi yüzünü farklı saç stilleriyle görmesini sağlar. Bu projede Kaggle’dan yüz şekillerini içeren bir veri seti kullanılmıştır ve makine öğrenmesi yöntemleriyle yüz şekilleri tahmin edilmiştir. Ardından Python kodlarıyla yüklenen fotoğraftaki yüz örnek saç modelleri içeren görsellere entegre edilmiştir. Django ile bir web arayüzü geliştirilmiştir.</p>
-                      <div style="margin: auto; text-align: center;">
-                        <a class="btn btn-info" target="_blank" href="https://drive.google.com/file/d/1z8V_FagvurGjxmPcOjt0v_WLApovndNO/view?usp=sharing">Video</a>
-                        <a class="btn btn-info" target="_blank" href="https://github.com/huseyintaskinn/FaceHair-DJango">Kodlar</a>
-                      </div>
-                  </div>
-
-                  <div class="col-md-10" style="margin: 20px auto;" id="proje-2">
-                    <div class="cc-porfolio-image img-raised aos-init aos-animate" data-aos="fade-up"
-                      data-aos-anchor-placement="top-bottom"><a href="#proje-2">
-                        <figure class="cc-effect"><img src="images/project-3.png" alt="Image">
-                          <figcaption>
-                            <div class="h4">Depremoloji Web Sitesi</div>
-                            <p>Web Programlama</p>
-                          </figcaption>
-                        </figure>
-                      </a></div>
-                      <h5 style="font-weight: bold; text-align: center;">Depremoloji</h5>
-                      <p style="text-align: center;">Depremoloji, ortaokul öğrencilerini depreme karşı bilinçlendirmeyi amaçlayan bir web sitesidir. Sitede deprem anında, deprem sırasında ve deprem sonrasında yapılması gerekenler hakkında bilgiler yer almaktadır. Ayrıca deprem çantası içerisinde nelerin olması gerektiği ile ilgili etkinlik yer almaktadır. Bunun yanı sıra site içerisinde deprem ile ilgili daha birçok bilgiye ulaşılabilmektedir. Bu proje PHP, HTML, CSS ve JavaScript kullanılarak geliştirilmiştir.</p>
-                      <div style="margin: auto;  text-align: center;">
-                        <a class="btn btn-info" target="_blank" href="https://github.com/huseyintaskinn/Depremoloji">Kodlar</a>
-                      </div>
-                  </div>
-
-                  <div class="col-md-10" style="margin: 20px auto;" id="proje-3">
-                    <div class="cc-porfolio-image img-raised aos-init aos-animate" data-aos="fade-up"
-                      data-aos-anchor-placement="top-bottom"><a href="#proje-3">
-                        <figure class="cc-effect"><img src="images/project-1.png" alt="Image">
-                          <figcaption>
-                            <div class="h4">Forum Dünyası Web Sitesi</div>
-                            <p>Web Programlama</p>
-                          </figcaption>
-                        </figure>
-                      </a></div>
-                      <h5 style="font-weight: bold; text-align: center;">Forum Dünyası</h5>
-                      <p style="text-align: center;">Forum Dünyası, bir forum sitesidir. Bu platformda kullanıcılar üyelik oluşturabilir, konular açabilir ve açılan konulara yorum yapabilirler. Site içerisinde yöneticiler de bulunmaktadır ve yöneticiler normal kullanıcılara göre ekstra yetkilere sahiptir. Ayrıca, site yönetimi için bir admin paneli de mevcuttur. Bu panel üzerinden yeni bölümler oluşturabilir ve site yönetilebilmektedir. Bu proje PHP, HTML, CSS ve JavaScript kullanılarak geliştirilmiştir.</p>  
-                      <div style="margin: auto;  text-align: center;">
-                        <a class="btn btn-info" target="_blank" href="https://github.com/huseyintaskinn/Forum-Dunyasi">Kodlar</a>
-                      </div>
-                  </div>
-
-                  <div class="col-md-10" style="margin: 20px auto;" id="proje-4">
-                    <div class="cc-porfolio-image img-raised aos-init aos-animate" data-aos="fade-up"
-                      data-aos-anchor-placement="top-bottom"><a href="#proje-4">
-                        <figure class="cc-effect"><img src="images/project-2.png" alt="Image">
-                          <figcaption>
-                            <div class="h4">Problem Çözme ve Algoritma Öğretimi için Web Sitesi</div>
-                            <p>Web Programlama</p>
-                          </figcaption>
-                        </figure>
-                      </a></div>
-                      <h5 style="font-weight: bold; text-align: center;">Problem Çözme ve Algoritma Öğretimi için Web Sitesi</h5>
-                      <p style="text-align: center;">Algoritma konusunun ortaokul öğrencilerine öğretilebilmesi için bir web sitesi hazırlamış olduğumuz bir web sitesidir. Site içerisinde konu anlatımı ve konuyu pekiştirecek alıştırmalar yer almaktadır.</p>
-                      <div style="margin: auto; text-align: center;">
-                        <a class="btn btn-info" target="_blank" href="https://github.com/huseyintaskinn/Algoritma-Ogretimi-Site">Kodlar</a>
-                      </div>
-                  </div>
-
-                  <div class="col-md-10" style="margin: 20px auto;" id="proje-5">
-                    <div class="cc-porfolio-image img-raised aos-init aos-animate" data-aos="fade-up"
-                      data-aos-anchor-placement="top-bottom"><a href="#proje-5">
-                        <figure class="cc-effect"><img src="images/project-5.png" alt="Image">
-                          <figcaption>
-                            <div class="h4">Rastgele NFT Oluşturma Uygulaması</div>
-                            <p>Python Programlama</p>
-                          </figcaption>
-                        </figure>
-                      </a></div>
-                      <h5 style="font-weight: bold; text-align: center;">Rastgele NFT Oluşturma Uygulaması</h5>
-                      <p style="text-align: center;">Hazırlamış olduğum rastgele NFT oluşturma uygulaması ile binlerce benzersiz NFT üretilebilmektedir. Temel olarak önceden hazırlamış olduğum arkaplan, göz, ağız ve kaş görsellerini rastgele bir şekilde seçip, renk tonunu değiştirmekte, ardından seçilen ve işlem görmüş gösrelleri üst üste birleştirmektedir. Bu işlemleri yaparken bir yandan da  bir JSON dosyasına oluşturulan her NFT için kullanılan görsellerin adlarını ve renk ayarlarını kaydetmektedir.</p>
-                      <div style="margin: auto; text-align: center;">
-                        <a class="btn btn-info" target="_blank" href="https://github.com/huseyintaskinn/RandomNFT">Kodlar</a>
-                      </div>
-                  </div>
-
-                  <div class="col-md-10" style="margin: 20px auto;" id="proje-6">
-                    <div class="cc-porfolio-image img-raised aos-init aos-animate" data-aos="fade-up"
-                      data-aos-anchor-placement="top-bottom"><a href="#proje-6">
-                        <figure class="cc-effect"><img src="images/project-7.png" alt="Image">
-                          <figcaption>
-                            <div class="h4">Kaybettim - Kayıp Eşya Bulma Uygulaması</div>
-                            <p>Masaüstü Programlama - Java</p>
-                          </figcaption>
-                        </figure>
-                      </a></div>
-                      <h5 style="font-weight: bold; text-align: center;">Kaybettim</h5>
-                      <p style="text-align: center;">Kaybettim, temel olarak kaybolan eşyalarımızı aranabileceği, bulmuş olduğumuz sahipsiz eşyaların paylaşılıp sahiplerine ulaştırılabileceği bir yardımlaşma platformdur. Kaybettim uygulaması sayesinde; kaybolan eşyalarınızı bulabilmekte veya bulmuş olunan ve kime ait olduğu bilinmeyen herhangi bir eşyanın sahibi bulunabilmektedir.</p>
-                      <div style="margin: auto; text-align: center;">
-                        <a class="btn btn-info" target="_blank" href="https://github.com/huseyintaskinn/Kaybettim">Kodlar</a>
-                      </div>
-                  </div>
-
-                  <div class="col-md-10" style="margin: 20px auto;" id="proje-7">
-                    <div class="cc-porfolio-image img-raised aos-init aos-animate" data-aos="fade-up"
-                      data-aos-anchor-placement="top-bottom"><a href="#proje-7">
-                        <figure class="cc-effect"><img src="images/project-4.png" alt="Image">
-                          <figcaption>
-                            <div class="h4">Diksiyon'um Uygulaması</div>
-                            <p>Masaüstü Programlama - C#</p>
-                          </figcaption>
-                        </figure>
-                      </a></div>
-                      <h5 style="font-weight: bold; text-align: center;">Diksiyon'um</h5>
-                      <p style="text-align: center;">Diksiyon'um, konuşma bozukluğu yaşayan bireylerin konuşmalarında iyileştirme sağlamayı amaçladığımız bir uygulamadır. Uygulama içerisinde tekerlerleme, kelime telaffuzu, çeşitli egzersizler ve fıkra gibi okuma metinleri yer almaktadır. Uygulama içerisinde kullanıcıların doğru telaffuzları duyabileceği ve sesli geri dönüt alabilecekleri butonlar bulunmaktadır.</p>
-                      <div style="margin: auto; text-align: center;">
-                        <a class="btn btn-info" target="_blank" href="https://github.com/huseyintaskinn/Diksiyonum">Kodlar</a>
-                      </div>
-                  </div>
-
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="section" id="experience">
-        <div class="container cc-experience">
-          <div class="h4 text-center mb-4 title">İş Hayatı</div>
-          <div class="card">
-            <div class="row">
-              <div class="col-md-3 bg-info" data-aos="fade-right" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body cc-experience-header">
-                  <p>2023 EKİM - 2024 EYLÜL</p>
-                  <div class="h5">Tam Yığın Web Geliştiricisi</div>
-                </div>
-              </div>
-              <div class="col-md-9" data-aos="fade-left" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body">
-                  <div class="h5">AYVOS Bilgi Teknolojileri </div>
-                    <ul>
-                      <li>Django Framework kullanarak arka uç geliştirme.</li>
-                      <li>Vue.js ve Nuxt.js kullanarak ön uç geliştirme.</li>
-                      <li>API entegrasyonu ve dokümantasyonu.</li>
-                      <li>Veri işleme ve makine öğrenmesi projelerinde görev alma.</li>
-                      <li>Kullanıcı arayüzü tasarımı ve geliştirilmesi.</li>
-                      <li>Sunucu yönetimi ve otomasyon araçları ile çalışma.</li>
-                    </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="row">
-              <div class="col-md-3 bg-info" data-aos="fade-right" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body cc-experience-header">
-                  <p>2023 AĞUSTOS - 2023 EYLÜL</p>
-                  <div class="h5">Mobil Uygulama Geliştiricisi - Stajyer</div>
-                </div>
-              </div>
-              <div class="col-md-9" data-aos="fade-left" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body">
-                  <div class="h5">AYVOS Bilgi Teknolojileri</div>
-                  <ul>
-                    <li>Flutter kullanarak mobil uygulama geliştirme.</li>
-                    <li>Flutter'ın temel özellikleri ve widget'ları öğrenmek.</li>
-                    <li>Mobil uygulamaların yaşam döngüsünü anlamak ve uygulamak.</li>
-                    <li>Flutter ile API bağlantılarını kurmak.</li>
-                    <li>Google Vision API kullanarak görseldeki nesneleri tespit eden uygulama geliştirmek.</li>
-                    <li>Yapay zeka ve görüntü işleme teknikleri kullanarak nesne algılama fonksiyonları geliştirmek.</li>
-                    <li>Kullanıcı deneyimini iyileştirmek ve uygulama karmaşıklığını artırmak.</li>
-                    <li>Mobil uygulama geliştirme sürecinde yaratıcı ve teknik problem çözme becerilerini kullanmak.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="row">
-              <div class="col-md-3 bg-info" data-aos="fade-right" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body cc-experience-header">
-                  <p>2023 TEMMUZ - 2023 AĞUSTOS</p>
-                  <div class="h5">Arka Uç Web Geliştiricisi - Stajyer</div>
-                </div>
-              </div>
-              <div class="col-md-9" data-aos="fade-left" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body">
-                  <div class="h5">AYVOS Bilgi Teknolojileri</div>
-                  <ul>
-                    <li>Django çerçevesi kullanarak web uygulamaları geliştirmek.</li>
-                    <li>Django REST Framework ile RESTful API'lar geliştirmek.</li>
-                    <li>JWT (JSON Web Token) kullanarak güvenli kimlik doğrulama sistemleri oluşturmak.</li>
-                    <li>Swagger kullanarak API dokümantasyonu hazırlamak.</li>
-                    <li>Django'nun popüler paketlerini inceleyip uygulamalarda kullanmak.</li>
-                    <li>Önceden geliştirilmiş web uygulamalarını Django frameworkü ile yeniden oluşturmak.</li>
-                    <li>Django REST Framework, JWT ve Swagger kullanarak online alışveriş projesi geliştirmek.</li>
-                    <li>Django Channels kullanarak gerçek zamanlı mesajlaşma uygulaması geliştirmek.</li>
-                    <li>WebSocket teknolojisi ile anlık iletişim çözümleri oluşturmak.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="row">
-              <div class="col-md-3 bg-info" data-aos="fade-right" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body cc-experience-header">
-                  <p>2018 - Yaz Dönemi</p>
-                  <div class="h5">STAJYER</div>
-                </div>
-              </div>
-              <div class="col-md-9" data-aos="fade-left" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body">
-                  <div class="h5">TAHA KARGO</div>
-                  <ul>
-                    <li>Bilgi işlem süreçlerine destek sağladım.</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="section">
-        <div class="container cc-education">
-          <div class="h4 text-center mb-4 title">Eğitim</div>
-          <div class="card">
-            <div class="row">
-              <div class="col-md-3 bg-info" data-aos="fade-right" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body cc-education-header">
-                  <p>2020 - DEVAM EDİYOR</p>
-                  <div class="h5">LİSANS (ÇAP)</div>
-                </div>
-              </div>
-              <div class="col-md-9" data-aos="fade-left" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body">
-                  <div class="h5">MARMARA ÜNİVERSİTESİ</div>
-                  <p class="category">TEKNOLOJİ FAKÜLTESİ</p>
-                  <p class="category" style="color: #2CA8FF;">BİLGİSAYAR MÜHENDİSLİĞİ</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="row">
-              <div class="col-md-3 bg-info" data-aos="fade-right" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body cc-education-header">
-                  <p>2019 - 2023</p>
-                  <div class="h5">LİSANS</div>
-                </div>
-              </div>
-              <div class="col-md-9" data-aos="fade-left" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body">
-                  <div class="h5">MARMARA ÜNİVERSİTESİ</div>
-                  <p class="category">ATATÜRK EĞİTİM FAKÜLTESİ</p>
-                  <p class="category" style="color: #2CA8FF;">BİLGİSAYAR VE ÖĞRETİM TEKNOLOJİLERİ EĞİTİMİ</p>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="card">
-            <div class="row">
-              <div class="col-md-3 bg-info" data-aos="fade-right" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body cc-education-header">
-                  <p>2015 - 2019</p>
-                  <div class="h5">LİSE</div>
-                </div>
-              </div>
-              <div class="col-md-9" data-aos="fade-left" data-aos-offset="50" data-aos-duration="500">
-                <div class="card-body">
-                  <div class="h5">İMMİB ERKAN AVCI MESLEKİ VE TEKNİK ANADOLU LİSESİ</div>
-                  <p class="category">Anadolu Teknİk Programı</p>
-                  <p class="category" style="color: #2CA8FF;">Bİlİşİm Teknolojİlerİ – Verİtabanı Programcılığı</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="section" id="contact">
-        <div class="cc-contact-information" style="background-color: #2CA8FF;">
-          <div class="container">
-            <div class="cc-contact">
-              <div class="row">
-                <div class="col-md-9">
-                  <div class="card mb-0" data-aos="zoom-in">
-                    <div class="h4 text-center title">Bana Ulaşın</div>
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="card-body">
-                          <form action="https://formspree.io/f/mrgjyzvk" method="POST">
-                            <div class="p pb-3"><strong>Bana ulaşmak için aşağıdaki formu doldurabilirsiniz.</strong>
-                            </div>
-                            <div class="row mb-3">
-                              <div class="col">
-                                <div class="input-group"><span class="input-group-addon"><i
-                                      class="fa fa-user-circle"></i></span>
-                                  <input class="form-control" type="text" name="name" placeholder="Adınız"
-                                    required="required" />
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row mb-3">
-                              <div class="col">
-                                <div class="input-group"><span class="input-group-addon"><i
-                                      class="fa fa-file-text"></i></span>
-                                  <input class="form-control" type="text" name="Subject" placeholder="Başlık"
-                                    required="required" />
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row mb-3">
-                              <div class="col">
-                                <div class="input-group"><span class="input-group-addon"><i
-                                      class="fa fa-envelope"></i></span>
-                                  <input class="form-control" type="email" name="_replyto"
-                                    placeholder="E-posta adresiniz" required="required" />
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row mb-3">
-                              <div class="col">
-                                <div class="form-group">
-                                  <textarea class="form-control" name="message" placeholder="Mesajınız"
-                                    required="required"></textarea>
-                                </div>
-                              </div>
-                            </div>
-                            <div class="row">
-                              <div class="col">
-                                <button class="btn btn-info" type="submit">Gönder</button>
-                              </div>
-                            </div>
-                          </form>
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="card-body">
-                          <p class="mb-0"><strong>Konum </strong></p>
-                          <p class="pb-2">Bahçelievler/İstanbul</p>
-                          <p class="mb-0"><strong>E-posta</strong></p>
-                          <p>huseyintaskinn023@gmail.com</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <span class="c-indent"></span><span class="c-kw">def</span> <span class="c-fn">solve</span>(<span class="c-kw">self</span>, problem): <br>
+          <span class="c-indent"></span><span class="c-indent"></span><span class="c-kw">return</span> <span class="c-str">"scalable solution"</span> ✓
         </div>
       </div>
     </div>
   </div>
-  <footer class="footer">
-    <div class="h4 title text-center">Hüseyin Taşkın</div>
-    <div class="text-center text-muted">
-      <p>&copy; Creative CV. All rights reserved.<br>Design - <a class="credit" href="https://templateflip.com"
-          target="_blank">TemplateFlip</a></p>
-    </div>
-  </footer>
-  <script src="js/core/jquery.3.2.1.min.js?ver=1.1.0"></script>
-  <script src="js/core/popper.min.js?ver=1.1.0"></script>
-  <script src="js/core/bootstrap.min.js?ver=1.1.0"></script>
-  <script src="js/now-ui-kit.js?ver=1.1.0"></script>
-  <script src="js/aos.js?ver=1.1.0"></script>
-  <script src="scripts/main.js?ver=1.1.0"></script>
-</body>
+</section>
 
+<div class="section-divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <p class="section-label reveal">Teknik Beceriler</p>
+  <h2 class="section-title reveal reveal-delay-1">Kullandığım teknolojiler</h2>
+  <p class="section-sub reveal reveal-delay-2">Backend'den DevOps'a, yapay zekadan mobil geliştirmeye uzanan geniş teknik yelpaze.</p>
+
+  <div class="skills-grid">
+    <div class="skill-card reveal">
+      <span class="skill-icon">⚙️</span>
+      <div class="skill-cat">Backend & API</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">Django</span>
+        <span class="skill-tag">Django REST</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">Spring Boot</span>
+        <span class="skill-tag">Spring Cloud</span>
+        <span class="skill-tag">WebSocket</span>
+        <span class="skill-tag">Swagger</span>
+      </div>
+    </div>
+    <div class="skill-card reveal reveal-delay-1">
+      <span class="skill-icon">🏗️</span>
+      <div class="skill-cat">Mimari & Tasarım</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Microservices</span>
+        <span class="skill-tag">API Gateway</span>
+        <span class="skill-tag">Saga Pattern</span>
+        <span class="skill-tag">Event-Driven</span>
+        <span class="skill-tag">Eureka Discovery</span>
+        <span class="skill-tag">SOLID</span>
+        <span class="skill-tag">Clean Code</span>
+      </div>
+    </div>
+    <div class="skill-card reveal reveal-delay-2">
+      <span class="skill-icon">🔐</span>
+      <div class="skill-cat">Auth & Güvenlik</div>
+      <div class="skill-tags">
+        <span class="skill-tag">JWT</span>
+        <span class="skill-tag">OAuth2</span>
+        <span class="skill-tag">OpenID Connect</span>
+        <span class="skill-tag">Keycloak</span>
+        <span class="skill-tag">RBAC</span>
+      </div>
+    </div>
+    <div class="skill-card reveal reveal-delay-3">
+      <span class="skill-icon">🗄️</span>
+      <div class="skill-cat">Veritabanı & Mesajlaşma</div>
+      <div class="skill-tags">
+        <span class="skill-tag">PostgreSQL</span>
+        <span class="skill-tag">Redis</span>
+        <span class="skill-tag">RabbitMQ</span>
+        <span class="skill-tag">MySQL</span>
+        <span class="skill-tag">MS SQL Server</span>
+        <span class="skill-tag">Firebase</span>
+      </div>
+    </div>
+    <div class="skill-card reveal">
+      <span class="skill-icon">🚢</span>
+      <div class="skill-cat">DevOps & Dağıtım</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">docker-compose</span>
+        <span class="skill-tag">GitHub Actions</span>
+        <span class="skill-tag">Nginx</span>
+        <span class="skill-tag">Gunicorn</span>
+        <span class="skill-tag">Linux</span>
+        <span class="skill-tag">Git</span>
+      </div>
+    </div>
+    <div class="skill-card reveal reveal-delay-1">
+      <span class="skill-icon">🤖</span>
+      <div class="skill-cat">Yapay Zeka & Veri</div>
+      <div class="skill-tags">
+        <span class="skill-tag">TensorFlow</span>
+        <span class="skill-tag">Deep Learning</span>
+        <span class="skill-tag">scikit-learn</span>
+        <span class="skill-tag">Computer Vision</span>
+        <span class="skill-tag">StyleGAN2</span>
+        <span class="skill-tag">Google Vision API</span>
+      </div>
+    </div>
+    <div class="skill-card reveal reveal-delay-2">
+      <span class="skill-icon">🎨</span>
+      <div class="skill-cat">Frontend & Mobil</div>
+      <div class="skill-tags">
+        <span class="skill-tag">React</span>
+        <span class="skill-tag">TypeScript</span>
+        <span class="skill-tag">Vue.js</span>
+        <span class="skill-tag">Nuxt.js</span>
+        <span class="skill-tag">Flutter</span>
+        <span class="skill-tag">Tailwind CSS</span>
+      </div>
+    </div>
+    <div class="skill-card reveal reveal-delay-3">
+      <span class="skill-icon">🛠️</span>
+      <div class="skill-cat">Diğer Araçlar</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Power Apps</span>
+        <span class="skill-tag">Power Automate</span>
+        <span class="skill-tag">n8n</span>
+        <span class="skill-tag">Hugging Face</span>
+        <span class="skill-tag">C#</span>
+        <span class="skill-tag">PHP</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <p class="section-label reveal">Projeler</p>
+  <h2 class="section-title reveal reveal-delay-1">Geliştirdiğim sistemler</h2>
+  <p class="section-sub reveal reveal-delay-2">Gerçek problemlere gerçek çözümler. Kurumsal projelerden akademik araştırmalara.</p>
+
+  <div class="projects-grid">
+
+    <!-- FEATURED: n11 -->
+    <div class="project-card featured reveal">
+      <div class="project-featured-header">
+        <div class="project-badges">
+          <span class="badge badge-blue">Java</span>
+          <span class="badge badge-blue">Spring Boot</span>
+          <span class="badge badge-teal">Microservices</span>
+        </div>
+        <div class="project-title">n11 E-Commerce<br>Microservices Platform</div>
+        <div class="project-desc" style="padding:0">
+          Spring Boot ve Spring Cloud ile geliştirilen kurumsal düzeyde e-ticaret sistemi.
+          API Gateway, Saga Pattern, RabbitMQ event-driven iletişim ve OAuth2/Keycloak güvenlik altyapısına sahip.
+        </div>
+        <div class="project-stack" style="padding:0;margin-top:1rem">
+          <span class="project-tech">Spring Cloud</span>
+          <span class="project-tech">Eureka</span>
+          <span class="project-tech">RabbitMQ</span>
+          <span class="project-tech">Keycloak</span>
+          <span class="project-tech">PostgreSQL</span>
+          <span class="project-tech">Docker</span>
+          <span class="project-tech">React</span>
+        </div>
+        <div class="project-footer" style="padding:1.5rem 0 0; border:none; margin-top:1.5rem">
+          <a href="https://github.com/huseyintaskinn/n11-ecommerce-microservices" target="_blank" class="project-link">GitHub'da İncele →</a>
+        </div>
+      </div>
+      <div class="project-visual">
+        <div class="arch-diagram"><span class="arch-hl">Frontend</span>
+  ↓
+<span class="arch-hl">API Gateway</span>
+  ↓
+┌─────────────────┐
+│  <span class="arch-accent">Microservices</span>   │
+│  ┌───┐  ┌───┐  │
+│  │SVC│  │SVC│  │
+│  └─┬─┘  └─┬─┘  │
+└────┼───────┼────┘
+     ↓       ↓
+  <span class="arch-hl">RabbitMQ</span>  <span class="arch-accent">Keycloak</span>
+     ↓
+<span class="arch-hl">Payment Service</span></div>
+      </div>
+    </div>
+
+    <!-- TaskFlow -->
+    <div class="project-card reveal">
+      <div class="project-header">
+        <div class="project-badges">
+          <span class="badge badge-blue">Python</span>
+          <span class="badge badge-blue">Django REST</span>
+        </div>
+        <div class="project-title">TaskFlow — Task Management Backend</div>
+      </div>
+      <div class="project-desc">
+        JWT kimlik doğrulama, Redis cache altyapısı ve RBAC (rol bazlı yetkilendirme) içeren
+        ölçeklenebilir görev yönetimi backend sistemi.
+      </div>
+      <div class="project-stack">
+        <span class="project-tech">JWT</span>
+        <span class="project-tech">Redis</span>
+        <span class="project-tech">PostgreSQL</span>
+        <span class="project-tech">Swagger</span>
+        <span class="project-tech">Docker</span>
+      </div>
+      <div class="project-footer">
+        <a href="https://github.com/huseyintaskinn/taskflow-backend" target="_blank" class="project-link">GitHub →</a>
+      </div>
+    </div>
+
+    <!-- FundAi -->
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-header">
+        <div class="project-badges">
+          <span class="badge badge-amber">Deep Learning</span>
+          <span class="badge badge-green">UYİK-2024</span>
+        </div>
+        <div class="project-title">FundAi — Göz Hastalığı Tespiti</div>
+      </div>
+      <div class="project-desc">
+        Fundus görüntülerinden göz hastalıklarını tespit eden derin öğrenme sistemi.
+        Xception modeli %89 F1 skoru. StyleGAN2-ADA sentetik veri üretimi.
+        UYİK-2024 kongresinde sunuldu.
+      </div>
+      <div class="project-stack">
+        <span class="project-tech">TensorFlow</span>
+        <span class="project-tech">StyleGAN2</span>
+        <span class="project-tech">React</span>
+        <span class="project-tech">Flutter</span>
+        <span class="project-tech">Hugging Face</span>
+      </div>
+      <div class="project-footer">
+        <a href="https://github.com/huseyintaskinn/FundAi-Bitirme-Projesi" target="_blank" class="project-link">GitHub →</a>
+        <a href="https://fundai.netlify.app" target="_blank" class="project-link" style="margin-left:auto">Demo ↗</a>
+      </div>
+    </div>
+
+    <!-- Real-Time -->
+    <div class="project-card reveal reveal-delay-2">
+      <div class="project-header">
+        <div class="project-badges">
+          <span class="badge badge-teal">WebSocket</span>
+          <span class="badge badge-blue">Django Channels</span>
+        </div>
+        <div class="project-title">Real-Time Messaging System</div>
+      </div>
+      <div class="project-desc">
+        Django Channels ve WebSocket tabanlı gerçek zamanlı mesajlaşma altyapısı.
+        JWT kimlik doğrulama, kanal gruplarıyla ölçeklenebilir mimari.
+      </div>
+      <div class="project-stack">
+        <span class="project-tech">Django Channels</span>
+        <span class="project-tech">WebSocket</span>
+        <span class="project-tech">JWT</span>
+        <span class="project-tech">Redis</span>
+      </div>
+      <div class="project-footer">
+        <a href="https://github.com/huseyintaskinn/Django-Channels-WhatsApp-Clone" target="_blank" class="project-link">GitHub →</a>
+      </div>
+    </div>
+
+    <!-- TÜBİTAK -->
+    <div class="project-card reveal">
+      <div class="project-header">
+        <div class="project-badges">
+          <span class="badge badge-green">TÜBİTAK 2209-A</span>
+          <span class="badge badge-teal">Flutter</span>
+        </div>
+        <div class="project-title">Speech Therapy Mobile App</div>
+      </div>
+      <div class="project-desc">
+        TÜBİTAK 2209-A destekli mobil konuşma terapisi uygulaması. Speech-to-text entegrasyonu,
+        oyunlaştırma mekanizmaları ve çok katmanlı rol sistemi. Klinik ortamda test edildi.
+      </div>
+      <div class="project-stack">
+        <span class="project-tech">Flutter</span>
+        <span class="project-tech">Firebase</span>
+        <span class="project-tech">Speech-to-text</span>
+        <span class="project-tech">Gamification</span>
+      </div>
+      <div class="project-footer">
+        <span style="font-family:var(--mono);font-size:0.68rem;color:var(--muted)">Ticari · kaynak kodu paylaşılmıyor</span>
+      </div>
+    </div>
+
+    <!-- Google Vision -->
+    <div class="project-card reveal reveal-delay-1">
+      <div class="project-header">
+        <div class="project-badges">
+          <span class="badge badge-teal">Flutter</span>
+          <span class="badge badge-amber">Vision API</span>
+        </div>
+        <div class="project-title">Google Vision API Flutter App</div>
+      </div>
+      <div class="project-desc">
+        Google Cloud Vision API entegrasyonuyla nesne tespiti ve görüntü etiketleme yapan
+        Flutter mobil uygulaması. AYVOS stajı kapsamında geliştirildi.
+      </div>
+      <div class="project-stack">
+        <span class="project-tech">Flutter</span>
+        <span class="project-tech">Dart</span>
+        <span class="project-tech">Google Vision API</span>
+        <span class="project-tech">REST API</span>
+      </div>
+      <div class="project-footer">
+        <a href="https://github.com/huseyintaskinn/Google-Vision-API-Flutter" target="_blank" class="project-link">GitHub →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <p class="section-label reveal">Deneyim</p>
+  <h2 class="section-title reveal reveal-delay-1">Çalışma geçmişim</h2>
+  <p class="section-sub reveal reveal-delay-2">Kurumsal ortamlarda edinilen gerçek dünya deneyimi.</p>
+
+  <div class="exp-timeline">
+    <div class="exp-item reveal">
+      <div class="exp-period">Tem 2025 – Ağu 2025</div>
+      <div class="exp-title">Software Developer — ERP & Otomasyon</div>
+      <div class="exp-company">Erenay Plastik · İstanbul</div>
+      <ul class="exp-bullets">
+        <li>Microsoft Power Apps ve Power Automate ile fabrika içi iş süreçlerini otomatikleştirdim</li>
+        <li>n8n ile sistemler arası veri entegrasyonları kurdum</li>
+        <li>ERP odaklı yazılım çözümleriyle operasyonel verimliliği artırdım</li>
+      </ul>
+    </div>
+    <div class="exp-item reveal reveal-delay-1">
+      <div class="exp-period">Eki 2023 – Eyl 2024 · 1 yıl</div>
+      <div class="exp-title">Backend Developer / Full Stack Developer</div>
+      <div class="exp-company">AYVOS Bilgi Teknolojileri · İstanbul</div>
+      <ul class="exp-bullets">
+        <li>Django REST Framework ile ölçeklenebilir RESTful API'ler tasarladım</li>
+        <li>JWT tabanlı kimlik doğrulama ve RBAC sistemi kurdum</li>
+        <li>PostgreSQL veri modelleme ve sorgu optimizasyonları yaptım</li>
+        <li>Vue.js / Nuxt.js ile frontend geliştirme; API entegrasyonlarını yönettim</li>
+        <li>Docker ile deployment ortamlarını standardize ettim</li>
+        <li>Veri işleme ve makine öğrenmesi projelerinde aktif rol aldım</li>
+      </ul>
+    </div>
+    <div class="exp-item reveal reveal-delay-2">
+      <div class="exp-period">Ağu 2023 – Eyl 2023 · Staj</div>
+      <div class="exp-title">Mobile App Developer</div>
+      <div class="exp-company">AYVOS Bilgi Teknolojileri · İstanbul</div>
+      <ul class="exp-bullets">
+        <li>Flutter ile çok platformlu mobil uygulama geliştirdim</li>
+        <li>Google Vision API entegrasyonuyla nesne tespiti uygulaması geliştirdim</li>
+      </ul>
+    </div>
+    <div class="exp-item reveal reveal-delay-3">
+      <div class="exp-period">Tem 2023 – Ağu 2023 · Staj</div>
+      <div class="exp-title">Backend Developer</div>
+      <div class="exp-company">AYVOS Bilgi Teknolojileri · İstanbul</div>
+      <ul class="exp-bullets">
+        <li>Django REST Framework ile RESTful API geliştirme; JWT ve Swagger entegrasyonu</li>
+        <li>Django Channels ve WebSocket ile gerçek zamanlı mesajlaşma altyapısı kurdum</li>
+        <li>Online alışveriş projesi backend'ini sıfırdan geliştirdim</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- AWARDS -->
+<section id="awards">
+  <p class="section-label reveal">Ödüller & Başarılar</p>
+  <h2 class="section-title reveal reveal-delay-1">Akademik tanınma</h2>
+  <p class="section-sub reveal reveal-delay-2">Teknik derinliğin yanında araştırma ve analitik düşünce birikimi.</p>
+
+  <div class="awards-grid">
+    <div class="award-card reveal">
+      <span class="award-glyph">🏆</span>
+      <div class="award-org">TÜBİTAK · Ekim 2023</div>
+      <div class="award-title">TÜBİTAK 2209-A Üniversite Öğrencileri Araştırma Projeleri Destekleme Programı</div>
+      <div class="award-desc">
+        "Konuşma Bozukluklarının Tedavisinde Mobil Uygulamaların Rolü" projesiyle fon desteği.
+        Flutter ile geliştirilen uygulama klinik ortamda test edildi; ADDIE modeli ile yürütüldü.
+      </div>
+      <div class="award-date">Marmara Üniversitesi · 2023</div>
+    </div>
+    <div class="award-card reveal reveal-delay-1">
+      <span class="award-glyph">🎓</span>
+      <div class="award-org">UYİK-2024 · Mayıs 2024</div>
+      <div class="award-title">V. Uluslararası Uygulamalı İstatistik Kongresi — Bildiri Sunumu</div>
+      <div class="award-desc">
+        "Fundus Görüntülerinin Analizi ile Göz Hastalıklarının Erken Teşhisi" çalışmasıyla kongre sunumu.
+        Xception mimarisi %89 F1 skoru ile en başarılı model olarak belirlendi.
+      </div>
+      <div class="award-date">Marmara Üniversitesi · Bitirme Projesi</div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <p class="section-label" style="text-align:center">İletişim</p>
+    <h2 class="section-title reveal" style="text-align:center">Birlikte çalışalım.</h2>
+    <p class="reveal" style="color:rgba(244,243,238,0.5);max-width:420px;margin:1rem auto 0;text-align:center">
+      Yeni pozisyonlar ve işbirlikleri için açığım. İletişime geçmekten çekinme.
+    </p>
+    <a href="mailto:huseyintaskinn023@gmail.com" class="contact-email reveal">
+      huseyintaskinn023@gmail.com
+    </a>
+    <div class="contact-links reveal">
+      <a href="https://linkedin.com/in/huseyintaskin023" target="_blank" class="contact-link">LinkedIn</a>
+      <a href="https://github.com/huseyintaskinn" target="_blank" class="contact-link">GitHub</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2026 Hüseyin Taşkın. Tüm hakları saklıdır.</p>
+  <p>İstanbul, Türkiye</p>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Nav scroll style
+window.addEventListener('scroll', () => {
+  const nav = document.querySelector('nav');
+  nav.style.padding = window.scrollY > 60 ? '0.9rem 4rem' : '1.25rem 4rem';
+});
+</script>
+</body>
 </html>
